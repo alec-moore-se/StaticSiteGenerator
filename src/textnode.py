@@ -13,7 +13,7 @@ class TextNode:
             self.text_type == other.text_type and self.url == other.url
 
     def __repr__(self):
-        return f"TextNode({self.text}, {self.text_type}, {self.url})"
+        return f"TextNode({self.text}, {self.text_type}, {self.url})\n"
 
 
 def text_node_to_html_node(text_node):
@@ -41,3 +41,12 @@ class TextType(Enum):
     CODE = "<code></code>"
     LINK = "<a href=></a>"
     IMAGE = "<img src= alt= />"
+
+
+class BlockType(Enum):
+    PARAGRAPH = ""
+    HEADING = "#"
+    CODE = "`"
+    QUOTE = '"'
+    UNORDERED_LIST = "-"
+    ORDERED_LIST = "$"
