@@ -109,7 +109,15 @@ def markdown_to_blocks(markdown):
 
 
 def block_to_block_type(block):
-    if re.search(r"^#+\s+", block, 'm') is not None:
+    if re.search(r"^#+\s+", block, re.M) is not None:
         return BlockType.HEADING
-    if re.search(r"^`{3}(?s:.*)`{3}", block, 'm') is not None:
+    if re.search(r"^`{3}(?s:.*)`{3}", block, re.M) is not None:
         return BlockType.CODE
+    if re.search(r"\"(.*?)\"", block, re.M) is not None:
+        return BlockType.QUOTE
+    if block[0][0] == "-":
+        return BlockType.UNORDERED_LIST
+    if block[0][0] == "1.":
+        return BlockType.ORDERED_LIST
+    else:
+        return BlockType.PARAGRAPH
