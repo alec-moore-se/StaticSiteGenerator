@@ -1,5 +1,5 @@
 from enum import Enum
-from htmlnode import LeafNode
+from htmlnode import LeafNode, HTMLNode
 
 
 class TextNode:
