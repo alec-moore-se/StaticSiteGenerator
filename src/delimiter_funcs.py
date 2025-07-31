@@ -224,3 +224,13 @@ def quote_to_html_node(block):
     content = " ".join(new_lines)
     children = text_to_children(content)
     return ParentNode("blockquote", children)
+
+
+def extract_title(markdown):
+    list_of_finds = re.findall(r"\s*?#{1} (.*?)$", markdown, re.M)
+    if list_of_finds == []:
+        raise Exception("No main header, needed for title")
+    title = list_of_finds[0]
+    title.strip()
+    title.lstrip("# ")
+    return title

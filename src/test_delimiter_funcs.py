@@ -1,5 +1,5 @@
 import unittest
-from delimiter_funcs import markdown_to_blocks, block_to_block_type
+from delimiter_funcs import markdown_to_blocks, block_to_block_type, extract_title
 from textnode import BlockType
 
 markdown_doc = """
@@ -101,3 +101,22 @@ class test_delimiter_funcs(unittest.TestCase):
         markdown_line = markdown_blocks[5]
         self.assertTrue(block_to_block_type(
             markdown_line) == BlockType.CODE)
+
+    def test_extract_title(self):
+        markdown = "   # Hello"
+        title = extract_title(markdown)
+        self.assertEqual("Hello", title)
+
+    def test_extract_title_error(self):
+        markdown = "     Hello"
+        title = ""
+        try:
+            title = extract_title(markdown)
+        except Exception:
+            pass
+        self.assertEqual("", title)
+
+    def test_extract_title_multiline(self):
+        markdown = """ what the helly\n # Jelly Belly \n ### cummies"""
+        title = extract_title(markdown)
+        self.assertEqual("Jelly Belly ", title)

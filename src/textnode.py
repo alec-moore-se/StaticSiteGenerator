@@ -48,5 +48,5 @@ class BlockType(Enum):
     HEADING = "#"
     CODE = "`"
     QUOTE = '"'
-    UNORDERED_LIST = "-"
-    ORDERED_LIST = "$"
+    ULIST = "-"
+    OLIST = "$"

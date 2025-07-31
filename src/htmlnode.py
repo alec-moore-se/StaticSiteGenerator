@@ -53,7 +53,3 @@ class ParentNode(HTMLNode):
             returner += child.to_html()
         returner += f"</{self.tag}>"
         return returner
-
-
-def text_to_children(text):
-    pass
