@@ -3,29 +3,21 @@ import shutil
 from delimiter_funcs import markdown_to_html_node, extract_title
 
 
-def static_to_public(starting_dir, curr_directory=None):
-    if (os.path.exists("./public")):
-        shutil.rmtree("./public")
-    os.mkdir(f"{starting_dir}/../public")
-    static_to_public_rec(starting_dir)
+def copy_files_recursive(source_dir_path, dest_dir_path):
+    if not os.path.exists(dest_dir_path):
+        os.mkdir(dest_dir_path)
+
+    for filename in os.listdir(source_dir_path):
+        from_path = os.path.join(source_dir_path, filename)
+        dest_path = os.path.join(dest_dir_path, filename)
+        print(f" * {from_path} -> {dest_path}")
+        if os.path.isfile(from_path):
+            shutil.copy(from_path, dest_path)
+        else:
+            copy_files_recursive(from_path, dest_path)
 
 
-def static_to_public_rec(path, copy_path=os.path.abspath("./public")):
-    print(f"copy_path:{copy_path}")
-    if os.path.isfile(path):
-        print(f"copying: {path} to {copy_path}")
-        shutil.copy(path, copy_path)
-    else:
-        dir_contents = os.listdir(path)
-        for paths in dir_contents:
-            combo_paths = os.path.join(path, paths)
-            print(f"combo_paths:{combo_paths}")
-            if os.path.isdir(combo_paths):
-                os.mkdir(os.path.join(copy_path, paths))
-            static_to_public_rec(combo_paths, os.path.join(copy_path, paths))
-
-
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     dest_path = dest_path.replace(".md", ".html")
     print(f"Generating page from {from_path} to {
           dest_path} using {template_path}")
@@ -41,6 +33,8 @@ def generate_page(from_path, template_path, dest_path):
     title = extract_title(markdown)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
+    template = template.replace('href="/', f'href="{basepath}')
+    template = template.replace('src="/', f'src="{basepath}')
     # if not os.path.exists(dest_path):
     #   os.makedirs(dest_path)
     with open(dest_path, "w") as h:
@@ -48,9 +42,9 @@ def generate_page(from_path, template_path, dest_path):
         h.close()
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     if os.path.isfile(dir_path_content):
-        generate_page(dir_path_content, template_path, dest_dir_path)
+        generate_page(dir_path_content, template_path, dest_dir_path, basepath)
     else:
         dir_contents = os.listdir(dir_path_content)
         for paths in dir_contents:
@@ -58,6 +52,6 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             if os.path.isdir(combo_paths):
                 os.mkdir(os.path.join(dest_dir_path, paths))
             generate_pages_recursive(
-                combo_paths, template_path, os.path.join(dest_dir_path, paths))
+                combo_paths, template_path, os.path.join(dest_dir_path, paths), basepath)
 
 # Comment at bottom of file
